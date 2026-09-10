@@ -1,0 +1,56 @@
+{
+  "alpha_0": {
+    "codebert": {
+      "status": "ok",
+      "queries": 28.0,
+      "mrr": 0.8869047619047619,
+      "precision_at_3": 0.3214285714285713,
+      "recall_at_1": 0.8392857142857143,
+      "recall_at_3": 0.9285714285714286
+    },
+    "unixcoder": {
+      "status": "ok",
+      "queries": 28.0,
+      "mrr": 0.8869047619047619,
+      "precision_at_3": 0.3214285714285713,
+      "recall_at_1": 0.8392857142857143,
+      "recall_at_3": 0.9285714285714286
+    }
+  },
+  "alpha_0.5": {
+    "codebert": {
+      "status": "ok",
+      "queries": 28.0,
+      "mrr": 0.875,
+      "precision_at_3": 0.3095238095238094,
+      "recall_at_1": 0.8392857142857143,
+      "recall_at_3": 0.8928571428571429
+    },
+    "unixcoder": {
+      "status": "ok",
+      "queries": 28.0,
+      "mrr": 0.9047619047619048,
+      "precision_at_3": 0.3214285714285713,
+      "recall_at_1": 0.875,
+      "recall_at_3": 0.9285714285714286
+    }
+  },
+  "alpha_1": {
+    "codebert": {
+      "status": "ok",
+      "queries": 28.0,
+      "mrr": 0.11904761904761905,
+      "precision_at_3": 0.07142857142857142,
+      "recall_at_1": 0.03571428571428571,
+      "recall_at_3": 0.21428571428571427
+    },
+    "unixcoder": {
+      "status": "ok",
+      "queries": 28.0,
+      "mrr": 0.7202380952380951,
+      "precision_at_3": 0.28571428571428564,
+      "recall_at_1": 0.625,
+      "recall_at_3": 0.8214285714285714
+    }
+  }
+}

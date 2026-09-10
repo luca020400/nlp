@@ -1,0 +1,27 @@
+Hybrid code search by combining lexical and semantic representations
+
+Large codebases are difficult to navigate, especially for new developers.
+Traditional code search tools rely on exact keyword matching, which fails when a natural language query does not align with the identifiers used in the codebase.
+For example, a query such as "How do I sign out?" may not retrieve a function named logout().
+
+This project proposes a hybrid system that combines classical information retrieval with semantic representations to improve natural language navigation of source code.
+The system integrates lexical matching using TF-IDF with semantic embeddings produced by CodeBERT, a transformer model pretrained on natural language and source code.
+
+Given a natural language query, the system retrieves and ranks possible matches by combining
+lexical similarity computed from identifiers, signatures, and comments using TF-IDF and semantic similarity
+computed from dense CodeBERT embeddings that capture information beyond exact token matches.
+
+The system introduces a language-agnostic intermediate representation (IR) that abstracts language-specific syntax into a common schema.
+Each function is represented by its name, signature, documentation, code body, and source location, to allow consistent indexing and retrieval across different programming languages.
+
+The system will initially focus on Java and Python, using language-specific lightweight parsers to extract function-level code units.
+These parsers rely on regular expressions and structure (indentation for Python and brace matching for Java) to extract relevant components for the IR.
+
+The modular design allows for easy expansion to new languages by implementing corresponding extractors that map language constructs to the IR.
+
+Further improvements could include:
+- Experimenting with different weighting schemes for combining lexical and semantic similarities.
+- Improving the embedding strategy to include surrounding context, helping to disambiguate generic function names such as init() or main().
+- Leveraging LLMs to expand user queries with synonyms or domain-specific terminology before searching.
+- Using a generative model to synthesize natural language summaries for undocumented functions during indexing.
+- Fine tuning CodeBERT on the target codebase to better capture internal naming conventions, acronyms, etc.

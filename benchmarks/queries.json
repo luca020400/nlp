@@ -1,0 +1,171 @@
+[
+  {
+    "query": "authenticate user",
+    "relevant": [
+      "python:benchmarks/sample_codebase/auth.py:1:login_user"
+    ]
+  },
+  {
+    "query": "terminate session",
+    "relevant": [
+      "python:benchmarks/sample_codebase/auth.py:20:logout_user"
+    ]
+  },
+  {
+    "query": "reset link",
+    "relevant": [
+      "python:benchmarks/sample_codebase/auth.py:27:reset_password"
+    ]
+  },
+  {
+    "query": "update user profile",
+    "relevant": [
+      "java:benchmarks/sample_codebase/user.java:3:updateProfile"
+    ]
+  },
+  {
+    "query": "delete user account",
+    "relevant": [
+      "java:benchmarks/sample_codebase/user.java:14:deleteAccount"
+    ]
+  },
+  {
+    "query": "change password",
+    "relevant": [
+      "python:benchmarks/sample_codebase/auth.py:38:change_password"
+    ]
+  },
+  {
+    "query": "load user profile",
+    "relevant": [
+      "python:benchmarks/sample_codebase/auth.py:49:get_user_profile"
+    ]
+  },
+  {
+    "query": "find account by email",
+    "relevant": [
+      "java:benchmarks/sample_codebase/user.java:21:findByEmail"
+    ]
+  },
+  {
+    "query": "create default profile",
+    "relevant": [
+      "java:benchmarks/sample_codebase/user.java:26:createProfile"
+    ]
+  },
+  {
+    "query": "list active sessions",
+    "relevant": [
+      "java:benchmarks/sample_codebase/user.java:34:listActiveSessions"
+    ]
+  },
+  {
+    "query": "read cached value before expiry",
+    "relevant": [
+      "python:benchmarks/sample_codebase/cache.py:1:get_cached_value"
+    ]
+  },
+  {
+    "query": "cache a value for sixty seconds",
+    "relevant": [
+      "python:benchmarks/sample_codebase/cache.py:12:put_cached_value"
+    ]
+  },
+  {
+    "query": "remove expired cache entries",
+    "relevant": [
+      "python:benchmarks/sample_codebase/cache.py:20:purge_expired_entries"
+    ]
+  },
+  {
+    "query": "load settings from a JSON file",
+    "relevant": [
+      "python:benchmarks/sample_codebase/files.py:6:read_json_config"
+    ]
+  },
+  {
+    "query": "export records as CSV with column names",
+    "relevant": [
+      "python:benchmarks/sample_codebase/files.py:15:export_csv_rows"
+    ]
+  },
+  {
+    "query": "compute a file checksum in chunks",
+    "relevant": [
+      "python:benchmarks/sample_codebase/files.py:23:compute_file_digest"
+    ]
+  },
+  {
+    "query": "reserve stock for an order",
+    "relevant": [
+      "java:benchmarks/sample_codebase/InventoryService.java:3:reserveStock"
+    ]
+  },
+  {
+    "query": "return inventory after cancellation",
+    "relevant": [
+      "java:benchmarks/sample_codebase/InventoryService.java:11:releaseStock"
+    ]
+  },
+  {
+    "query": "find products below the reorder threshold",
+    "relevant": [
+      "java:benchmarks/sample_codebase/InventoryService.java:20:listLowStock"
+    ]
+  },
+  {
+    "query": "email a purchase receipt",
+    "relevant": [
+      "java:benchmarks/sample_codebase/NotificationService.java:3:sendReceipt"
+    ]
+  },
+  {
+    "query": "disable promotional emails",
+    "relevant": [
+      "java:benchmarks/sample_codebase/NotificationService.java:10:unsubscribe"
+    ]
+  },
+  {
+    "query": "retry failed message deliveries",
+    "relevant": [
+      "java:benchmarks/sample_codebase/NotificationService.java:21:retryFailedMessages"
+    ]
+  },
+  {
+    "query": "discard stale cached data",
+    "relevant": [
+      "python:benchmarks/sample_codebase/cache.py:20:purge_expired_entries"
+    ]
+  },
+  {
+    "query": "fingerprint a large document without reading it all at once",
+    "relevant": [
+      "python:benchmarks/sample_codebase/files.py:23:compute_file_digest"
+    ]
+  },
+  {
+    "query": "need replenishing",
+    "relevant": [
+      "java:benchmarks/sample_codebase/InventoryService.java:20:listLowStock"
+    ]
+  },
+  {
+    "query": "stop advertisements",
+    "relevant": [
+      "java:benchmarks/sample_codebase/NotificationService.java:10:unsubscribe"
+    ]
+  },
+  {
+    "query": "read or write a value in the cache",
+    "relevant": [
+      "python:benchmarks/sample_codebase/cache.py:1:get_cached_value",
+      "python:benchmarks/sample_codebase/cache.py:12:put_cached_value"
+    ]
+  },
+  {
+    "query": "disable marketing messages for this subscriber",
+    "relevant": [
+      "java:benchmarks/sample_codebase/NotificationService.java:10:unsubscribe"
+    ]
+  }
+]
