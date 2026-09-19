@@ -58,7 +58,7 @@ and code tokens, and combines it with embeddings produced by CodeBERT or UniXcod
 
 Python extraction uses the AST while Java extraction uses regular expressions and brace code extraction.
 
-The tooling supports indexing, searching, and benchmarking with hit rate, MRR, recall, and precision.
+The tooling supports indexing, searching, and benchmarking with hit rate, MRR, recall, and precision metrics.
 
 Compared with the original proposal, the implementation also includes UniXcoder support, a 28-query Python/Java benchmark,
 persistent indices, and a system that allows other languages to be integrated.
@@ -116,7 +116,7 @@ The project has four practical objectives:
   \item Extract function-level code units with their location information.
   \item Make the extracted code searchable through both TF-IDF and embeddings.
   \item Expose everything through a small command line interface.
-  \item Provide a  benchmark so the models can be compared in the report.
+  \item Provide a benchmark so the models can be compared in the report.
 \end{itemize}
 
 The extractors are lightweight but sufficient for function level indexing.
@@ -156,7 +156,7 @@ The system is organized as a pipeline. From top to bottom:
 The flow is ``straightforward''.
 The repository is indexed once and persisted to disk, later on at query time, the query text goes through the
 same lexical and semantic processing path as the indexed code.
-The system then scores and ranks the results, returning the top matches to the user, along their source location.
+The system then scores and ranks the results, returning the top matches to the user, along their source locations.
 
 \subsection{Intermediate representation}
 \label{subsec:ir}
@@ -166,7 +166,7 @@ Each function is represented by an identifier, the language name, the file path,
 the symbol name, a readable signature, documentation comments or docstrings, the code body, and the start and end line numbers.
 
 The IR keeps the search pipeline language-agnostic.
-Python and Java have different syntax, but both become the same type of object after extraction (minus the code body itself).
+Python and Java have different syntax, but both become the same type of object after extraction, minus the code body itself that is stored as is.
 
 That makes the next stages of the pipeline ``independent'' of the source language, simplifying the whole design.
 
@@ -215,7 +215,7 @@ For example, a query about ``signing out'' should still point to a function name
 
 The project combines both approaches treating lexical and semantic search as complementary tools.
 
-TF-IDF is relatively cheap, gives a interpretable result, and good at exact matching.
+TF-IDF is relatively cheap, gives an interpretable result, and is good at exact matching.
 Embeddings given by Transformer models can capture similarities between different words, but they are more expensive to compute and less interpretable.
 
 \section{Implementation}
@@ -233,9 +233,9 @@ The Python extractor uses the built-in \href{https://docs.python.org/3/library/a
 The Java extractor uses regular expressions for method headers and a brace-aware scanner for method bodies.
 
 \noindent
-This is sufficient for scenarios where the focus is on function level search, as we don't do any ``full'' program analysis.
+This is sufficient for scenarios where the focus is on function level search, as we don't perform any kind of full program analysis.
 
-The extraction process does not try to parse every possible language feature, it picked a subset of the language that is just enough for function search.
+The extraction process does not try to parse every possible language feature, we picked a subset of the language that is sufficient for function search.
 
 \subsection{Lexical indexing}
 \label{subsec:tfidf}
@@ -252,13 +252,14 @@ The lexical side uses TF-IDF from scikit-learn. The text passed to the vectorize
 
 This matters because source code search is sensitive to identifier structure.
 A function called \texttt{login\_user} should still be searchable through the terms ``login'' and ``user''.
-The IR  decomposes identifiers and exposes those to TF-IDF.
+The IR decomposes identifiers at underscores and other non-word characters and exposes the resulting tokens to TF-IDF.
 
 \subsection{Semantic encoding}
 \label{subsec:semantic}
 
 The semantic component supports two pretrained encoders.
-\texttt{codebert} is a RoBERTa-based model trained on paired natural-language and programming-language data, while \texttt{unixcoder} is a RoBERTa-based model trained for unified cross-modal code understanding and generation.
+\texttt{codebert} is a RoBERTa-based model trained on paired natural-language and programming-language data \cite{feng2020codebertpretrainedmodelprogramming},
+while \texttt{unixcoder} is a RoBERTa-based model trained for unified cross-modal code understanding and generation \cite{guo2022unixcoderunifiedcrossmodalpretraining}.
 
 \begin{center}
   \small
@@ -286,7 +287,7 @@ UniXcoder uses the official Microsoft wrapper in encoder mode. The wrapper sets 
 The implementation mean-pools the valid token vectors and L2-normalizes the result.
 
 \bigskip
-Both model are exposed through the shared interface `\texttt{SemanticEncoder}', so the rest of the code does not care which encoder is in use.
+Both models are exposed through the shared interface ``\texttt{SemanticEncoder}'', so the rest of the code does not depend on which encoder is in use.
 
 For each function, the input passed to the encoder contains its documentation, signature, and up to the first 2000 characters of its body.
 
@@ -301,7 +302,7 @@ The current default is \texttt{0.5}, which gives the lexical and semantic sides 
 TF-IDF vectors are L2-normalized by the vectorizer, so the dot product between the query vector and each function vector is equivalent to the cosine similarity.
 
 \noindent
-The indexed semantic vectors and the query embedding are also L2-normalized explicitly therefore their dot product is yet anither cosine similarity.
+The indexed semantic vectors and the query embedding are also explicitly L2-normalized, therefore their dot product is another cosine similarity.
 
 \noindent
 These values are the \texttt{lexical} and \texttt{semantic} scores printed by the CLI.
@@ -318,7 +319,7 @@ Thus a score of zero remains zero, and the largest positive score becomes one.
 The CLI displays both ``raw'' cosine similarities, while the final score is the weighted combination of the normalized values.
 
 As an alternative to score blending, the ranker supports Reciprocal Rank Fusion (RRF) \cite{shah2024rrf}.
-Instead of normalizing and weighting different the similarity scores, RRF treats retrieval as a voting problem based on the relative rank order.
+Instead of normalizing and weighting the different similarity scores, RRF treats retrieval as a voting problem based on the relative rank order.
 
 Each function \(d\) receives points according to its placement in the lexical and semantic rankings:
 \[
@@ -326,7 +327,7 @@ Each function \(d\) receives points according to its placement in the lexical an
 \]
 where \(r_m(d) \ge 1\) is the rank assigned by retriever \(m\), and \(k\) is a smoothing constant.
 
-By using reciprocal rank, top-ranked candidates are rewarded exponentially more than lower ones, while the smoothing constant \(k\) lowers
+By using reciprocal rank, top-ranked candidates receive more weight than lower-ranked ones, while the smoothing constant \(k\) reduces
 the advantage of a single extreme rank over consistent matches found across both lists.
 Functions with no lexical match receive zero points from the lexical term, ties share their average rank, and ties in the final RRF score are decided by their ID order.
 
@@ -446,8 +447,8 @@ the multi-answer query uses the fraction of its relevant functions retrieved.
     \toprule
     Metric & Meaning \\
     \midrule
-    Recall@1 & Fraction of queries whose relevant function is ranked first. \\
-    Recall@3 & Fraction of queries whose relevant function appears in the first three results. \\
+    Recall@1 & Mean fraction of relevant functions retrieved at rank one. \\
+    Recall@3 & Mean fraction of relevant functions retrieved in the first three results. \\
     MRR@3 & Mean reciprocal rank within the top three: \(1/r\) if the relevant function occurs at rank \(r\leq3\), and zero otherwise. Stored as \texttt{mrr} in the JSON report. \\
     Precision@3 & Average fraction of the three returned results that are relevant. \\
     \bottomrule
@@ -499,7 +500,7 @@ The aggregate metrics summarize different rankings: UniXcoder has higher Recall@
 while both blends have the same Precision@3 after rounding.
 
 \paragraph{Failures in top three}
-Picking UniXcoder as the best configuration, the following queries fail to fetch the expected function in the top three:
+Using the UniXcoder, the best model found in this experiment, the following queries fail to fetch the expected function in the top three:
 
 \begin{itemize}
   \item ``need replenishing'' -- expected \texttt{listLowStock};
@@ -560,7 +561,7 @@ In this benchmark, score blending shows the best results, but RRF may be more ro
 \subsection{Dataset limitations}
 \label{subsec:dataset-limits}
 
-The benchmark is a small, and the queries sometimes reuse words (or part of them) from identifiers or documentation.
+The benchmark is small, and the queries sometimes reuse words, or parts of words, from identifiers or documentation.
 It does not represent large repositories, so the results should not be read as general truth.
 
 The searcher also always returns a ranking: detecting an unanswerable query would require thresholding raw scores before normalization,
@@ -572,10 +573,10 @@ or implementing yet another component with that specific purpose.
 A possible path to improve the tooling and the benchmark is to:
 
 \begin{itemize}
-  \item adding support for more programming languages with new extractors
+  \item adding support for more programming languages via new extractors
   \item using a larger and more diverse benchmark set
-  \item experimenting with different values of the hybrid weight, weighted RRF, or other techniques as a whole
-  \item fine tune/adapt the encoders on the specific IR format
+  \item experimenting with different values of the hybrid weight, weighted RRF, or other fusion techniques
+  \item fine tuning or adapting the encoders to the specific IR format
 \end{itemize}
 
 \section{LLM usage policy}
